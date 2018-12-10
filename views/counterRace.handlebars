@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8" />
+		<title>{{title}}</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+			}
+		</style>
+	</head>
+	<body>
+        <h1>
+            {{title}}
+        </h1>
+        <h2>You are Member of Team  <strong>{{team}}</strong></h2>
+        <p>Your Teams Count is: <strong>{{count}}</strong>.</p>
+        <form method='post' action='/counterRaceRoundTrip'>
+            <button type="submit">Count One Up</button>
+        </form>
+        <p><a href="">&#x21bb;&nbsp;Reload</a></p>
+        <p><a href="/">Home</a></p>
+	</body>
+</html>

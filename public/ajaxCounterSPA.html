@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AjaxCounterSPA</title>
+    <script>
+      window.addEventListener('load', function () {
+
+        // viewRefs
+        const countOutput = document.getElementById('countOutput');
+        const upBtn = document.getElementById('upBtn');
+        const downBtn = document.getElementById('downBtn');
+
+        // rendering
+        function displayCount(currentCount) {
+          countOutput.innerHTML = currentCount;
+        }
+
+        // controller / event listeners
+        upBtn.addEventListener('click', function (e) {
+          incCount(displayCount);
+        });
+        downBtn.addEventListener('click', function (e) {
+          decCount(displayCount);
+        });
+
+        // service layer
+        function getCount(processResponseCountCallbackFn) {
+          getJsonFromServer('GET', '/getCounterJson',
+            function (countJson) {
+              processResponseCountCallbackFn(countJson.ajaxCounter)
+            });
+        }
+
+        function incCount(processResponseCountCallbackFn) {
+          getJsonFromServer('POST', '/incCounterJson',
+            function (countJson) {
+              processResponseCountCallbackFn(countJson.ajaxCounter)
+            });
+        }
+
+        function decCount(processResponseCountCallbackFn) {
+          getJsonFromServer('POST', '/decCounterJson',
+            function (countJson) {
+              processResponseCountCallbackFn(countJson.ajaxCounter)
+            });
+        }
+
+        function getJsonFromServer(method, url, processResponseJsonCallbackFn) {
+          let aReq = new XMLHttpRequest();
+          aReq.onload = function (e) {
+            processResponseJsonCallbackFn(e.target.response);
+          };
+          aReq.open(method, url, true);
+          aReq.responseType = 'json';
+          aReq.send();
+        }
+
+        // init
+        getCount(displayCount);
+
+      });
+
+    </script>
+</head>
+<body>
+<h1>Ajax Counter SPA (server-managed global counter)</h1>
+<p>The global count is <span id="countOutput">0</span></p>
+<p>
+    <button id="upBtn">Count Up</button>
+</p>
+<p>
+    <button id="downBtn">Count down</button>
+</p>
+</body>
+</html>

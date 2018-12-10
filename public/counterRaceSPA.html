@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CounterRaceSPA</title>
+    <script>
+      window.addEventListener('load', function () {
+
+        // viewRefs
+        const teamOutput = document.getElementById('teamOutput');
+        const countOutput = document.getElementById('countOutput');
+        const upBtn = document.getElementById('upBtn');
+        const downBtn = document.getElementById('downBtn');
+
+        // rendering
+        function displayCountJson(countJson) {
+          teamOutput.innerHTML = countJson.team;
+          countOutput.innerHTML = countJson.count;
+        }
+
+        // controller / event listeners
+        upBtn.addEventListener('click', function (e) {
+          incCount(displayCountJson);
+        });
+
+        // service layer
+        function getCount(processResponseCountCallbackFn) {
+          getJsonFromServer('GET', '/raceCounterApi', processResponseCountCallbackFn);
+        }
+
+        function incCount(processResponseCountCallbackFn) {
+          getJsonFromServer('POST', '/raceCounterApi/up', processResponseCountCallbackFn);
+        }
+
+        function getJsonFromServer(method, url, processResponseJsonCallbackFn) {
+          let aReq = new XMLHttpRequest();
+          aReq.onload = function (e) {
+            processResponseJsonCallbackFn(e.target.response);
+          };
+          aReq.open(method, url, true);
+          aReq.responseType = 'json';
+          aReq.send();
+        }
+
+        // init
+        getCount(displayCountJson);
+
+      });
+    </script>
+</head>
+<body>
+<h1>Counter Race SPA (server-managed teams counter)</h1>
+<h2>You are Member of Team <strong> <span id="teamOutput"></span></strong></h2>
+<p>Your Teams Count is: <strong> <span id="countOutput">0</span></strong>.</p>
+<p>
+    <button id="upBtn">Count One Up</button>
+</p>
+</body>
+</html>

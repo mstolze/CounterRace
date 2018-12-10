@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LocalCounterSPA</title>
+    <script>
+      window.addEventListener('load', function () {
+        //model
+        let counter = 0;
+
+        // viewRefs
+        const countOutput = document.getElementById('countOutput');
+        const upBtn = document.getElementById('upBtn');
+        const downBtn = document.getElementById('downBtn');
+
+        // rendering
+        function redisplay() {
+          countOutput.innerHTML = counter;
+        }
+
+        // controller / event listeners
+
+        upBtn.addEventListener('click', function (e) {
+          counter++;
+          redisplay();
+        });
+        downBtn.addEventListener('click', function (e) {
+          counter--;
+          redisplay();
+        });
+      });
+    </script>
+</head>
+<body>
+<h1>Local Counter SPA (no server connection)</h1>
+<p>Your current count is <span id="countOutput">0</span></p>
+<p>
+    <button id="upBtn">Count Up</button>
+</p>
+<p>
+    <button id="downBtn">Count down</button>
+</p>
+</body>
+</html>
