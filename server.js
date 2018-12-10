@@ -240,8 +240,12 @@ svr.post('/downSession', function (req, res) {
 // **********************
 
 
-console.log("ServerDemo starting ... Point browser to http://localhost:3300/");
+console.log("starting server");
 
-svr.listen(process.env.PORT || 3300);
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
+svr.listen(port);
 
-console.log("started");
+console.log(`ServerDemo started ... Point browser to http://localhost:${port}/`);
