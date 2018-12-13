@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CounterRaceConsole</title>
+    <script>
+      window.addEventListener('load', function () {
+
+        // viewRefs
+        const tigersOutput = document.getElementById('tigers-output');
+        const bullsOutput = document.getElementById('bulls-output');
+        const resetBtn = document.getElementById('reset-btn');
+
+        // rendering
+        function displayCountsJson(countJson) {
+            tigersOutput.innerHTML = countJson["Tigers"];
+            bullsOutput.innerHTML = countJson["Bulls"];
+        }
+
+        // controller / event listeners
+          resetBtn.addEventListener('click', function (e) {
+              resetCount(displayCountsJson);
+        });
+
+        // service layer
+        function getCount(processResponseCountCallbackFn) {
+          getJsonFromServer('GET', '/raceCounterAllApi', processResponseCountCallbackFn);
+        }
+
+        function resetCount(processResponseCountCallbackFn) {
+          getJsonFromServer('POST', '/raceCounterAllApi/reset', processResponseCountCallbackFn);
+        }
+
+        function getJsonFromServer(method, url, processResponseJsonCallbackFn) {
+          let aReq = new XMLHttpRequest();
+          aReq.onload = function (e) {
+            processResponseJsonCallbackFn(e.target.response);
+          };
+          aReq.open(method, url, true);
+          aReq.responseType = 'json';
+          aReq.send();
+        }
+
+        // init
+        getCount(displayCountsJson);
+        setInterval(_=>getCount(displayCountsJson), 1000);
+
+      });
+    </script>
+</head>
+<body>
+<h1>Counter Race Console (SPA)</h1>
+
+<h2>Bulls <strong> <span id="bulls-output"></span></strong></h2>
+<h2>Tigers <strong> <span id="tigers-output"></span></strong></h2>
+<p>
+    <button id="reset-btn">Reset Counters</button>
+</p>
+</body>
+</html>

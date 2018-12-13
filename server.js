@@ -37,7 +37,7 @@ let direct2Counter = 0;
 svr.route('/serverGenDynamic')
   .get(function (req, res, next) {
     direct2Counter++;
-    res.send(`serverGenDynamic - dynamic response: You requested this page ${direct2Counter} times`);
+    res.send(`serverGenDynamic - Dynamic response: The global page-request counter is currently at ${direct2Counter}`);
   });
 
 
@@ -47,7 +47,8 @@ svr.route('/serverGenDynamicNice')
   .get(function (req, res, next) {
     direct2Counter++;
     res.send(makeHTMLPage('serverGenDynamicNice',
-      `<h1>serverGenDynamicNice </h1><h1>Dynamic response: You requested this page ${direct2Counter} times</h1>`));
+      `<h1>serverGenDynamicNice </h1>
+             <h2>Dynamic response: The global page-request counter is currently at ${direct2Counter}</h2>`));
   });
 
 function makeHTMLPage(title, body) {
@@ -128,7 +129,7 @@ svr.post('/downSession', function (req, res) {
 
 
 // +++++ counterRaceRoundTrip
-{
+
   let counterRaceParticipantsCounter = 0;
   const teamNamesArray = ['Bulls', 'Tigers'];
   const teamCountsArray = [0, 0];
@@ -164,7 +165,6 @@ svr.post('/downSession', function (req, res) {
       incTeamCount(req);
       res.redirect('counterRaceRoundTrip');
     });
-}
 // +++++ counterSPA
 {
   let ajaxCounter = 1;
@@ -188,52 +188,75 @@ svr.post('/downSession', function (req, res) {
 }
 
 // +++++ counterRaceSPA
-{
-  let spaCounterRaceParticipantsCounter = 0;
-  const spaTeamNamesArray = ['Bulls', 'Tigers'];
-  const spaTeamCountsArray = [0, 0];
 
-  function getSpaCounterRaceTeamNr(session) {
-    if (session.spaCounterRaceTeamNr === undefined) {
-      spaCounterRaceParticipantsCounter++;
-      session.spaCounterRaceTeamNr = (spaCounterRaceParticipantsCounter % spaTeamNamesArray.length);
-    }
-    return session.spaCounterRaceTeamNr;
-  }
-
-  function getSpaCounterRaceTeamName(session) {
-    return spaTeamNamesArray[getSpaCounterRaceTeamNr(session)];
-  }
-
-  function getSpaCounterTeamCount(session) {
-    return spaTeamCountsArray[getSpaCounterRaceTeamNr(session)];
-  }
-
-  function incSpaCounterRaceTeamCount(session) {
-    const teamNr = getSpaCounterRaceTeamNr(session);
-    spaTeamCountsArray[teamNr] = spaTeamCountsArray[teamNr] + 1;
-  }
+  // let spaCounterRaceParticipantsCounter = 0;
+  // const spaTeamNamesArray = ['Bulls', 'Tigers'];
+  // const spaTeamCountsArray = [0, 0];
+  //
+  // function getSpaCounterRaceTeamNr(session) {
+  //   if (session.spaCounterRaceTeamNr === undefined) {
+  //     spaCounterRaceParticipantsCounter++;
+  //     session.spaCounterRaceTeamNr = (spaCounterRaceParticipantsCounter % spaTeamNamesArray.length);
+  //   }
+  //   return session.spaCounterRaceTeamNr;
+  // }
+  //
+  // function getSpaCounterRaceTeamName(session) {
+  //   return spaTeamNamesArray[getSpaCounterRaceTeamNr(session)];
+  // }
+  //
+  // function getSpaCounterTeamCount(session) {
+  //   return spaTeamCountsArray[getSpaCounterRaceTeamNr(session)];
+  // }
+  //
+  // function incSpaCounterRaceTeamCount(session) {
+  //   const teamNr = getSpaCounterRaceTeamNr(session);
+  //   spaTeamCountsArray[teamNr] = spaTeamCountsArray[teamNr] + 1;
+  // }
 
   svr.route('/raceCounterApi')
     .get(function (req, res, next) {
       res.json(
         {
-          team: getSpaCounterRaceTeamName(req.session),
-          count: getSpaCounterTeamCount(req.session)
+          team: getTeamName(req),
+          count: getTeamCount(req)
         });
     });
 
   svr.route('/raceCounterApi/up')
     .post(function (req, res, next) {
-      incSpaCounterRaceTeamCount(req.session);
+      incTeamCount(req);
       const counterObj = {
-        team: getSpaCounterRaceTeamName(req.session),
-        count: getSpaCounterTeamCount(req.session)
+        team: getTeamName(req),
+        count: getTeamCount(req)
       };
       console.log(`up team ${counterObj.team}, new count: ${counterObj.count}`)
       res.json(counterObj);
     });
-}
+
+  // +++++ counterRace Console
+
+  svr.route('/raceCounterAllApi')
+  .get(function (req, res, next) {
+    // TODO clean up (hack)
+    res.json(
+        {
+          [teamNamesArray[0]]: teamCountsArray[0],
+          [teamNamesArray[1]]: teamCountsArray[1]
+        });
+  });
+
+  svr.route('/raceCounterAllApi/reset')
+  .post(function (req, res, next) {
+    teamCountsArray[0] = 0;
+    teamCountsArray[1] = 0;
+    res.json(
+        {
+          [teamNamesArray[0]]: teamCountsArray[0],
+          [teamNamesArray[1]]: teamCountsArray[1]
+        });
+  });
+
 
 // **********************
 // *** Start Server   ***
