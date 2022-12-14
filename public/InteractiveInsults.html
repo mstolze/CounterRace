@@ -1,64 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Interactive Insults</title>
-    <style>
-      output,
-      button,
-      input {
-        display: block;
-      }
-      output {
-        font-size: 3em;
-        font-weight: bolder;
-        margin: 0 10px;
-      }
-    </style>
-    <script>
-      var randomBodyParts = ["Face", "Nose", "Hair"];
-      var randomAdjectives = ["Smelly", "Boring", "Stupid"];
-      var randomWords = ["Fly", "Marmot", "Stick", "Monkey", "Rat"];
+<head>
+  <meta charset="UTF-8"/>
+  <title>Interactive Insults</title>
+  <style>
+    output,
+    button,
+    input {
+      display: block;
+    }
 
-      function nextInsult() {
-        // Pick a random body part from the randomBodyParts array:
-        var randomBodyPart = randomBodyParts[Math.floor(Math.random() * 3)];
-        // Pick a random adjective from the randomAdjectives array:
-        var randomAdjective = randomAdjectives[Math.floor(Math.random() * 3)];
-        // Pick a random word from the randomWords array:
-        var randomWord = randomWords[Math.floor(Math.random() * 5)];
-        // Join all the random strings into a sentence:
-        return (
-          "your " +
-          randomBodyPart +
-          " is like a " +
-          randomAdjective +
-          " " +
-          randomWord +
-          "!!!"
-        );
+    output {
+      font-size: 3em;
+      font-weight: bolder;
+      margin: 0 10px;
+    }
+  </style>
+  <script>
+    const randomBodyParts = ["Face", "Nose", "Hair"];
+    const randomAdjectives = ["Smelly", "Boring", "Stupid"];
+    const randomWords = ["Fly", "Marmot", "Stick", "Monkey", "Rat"];
+
+    function nextInsult() {
+      // Pick a random body part from the randomBodyParts array:
+      const randomBodyPart = randomBodyParts[Math.floor(Math.random() * 3)];
+      // Pick a random adjective from the randomAdjectives array:
+      const randomAdjective = randomAdjectives[Math.floor(Math.random() * 3)];
+      // Pick a random word from the randomWords array:
+      const randomWord = randomWords[Math.floor(Math.random() * 5)];
+      // Join all the random strings into a sentence:
+      return (
+        "your " +
+        randomBodyPart +
+        " is like a " +
+        randomAdjective +
+        " " +
+        randomWord +
+        "!!!"
+      );
+    }
+
+    function initApp() {
+      const nameInputElement = document.getElementById("name");
+      const outputElement = document.getElementById("out");
+      const btn1 = document.getElementById("btn1");
+
+      function displayInsultForName() {
+        outputElement.value = `Hey ${
+          nameInputElement.value
+        }, ${nextInsult()}`;
       }
 
-      function initApp() {
-        var nameInputElement = document.getElementById("name");
-        var outputElement = document.getElementById("out");
-        var btn1 = document.getElementById("btn1");
+      btn1.addEventListener("click", displayInsultForName);
+    }
 
-        function displayInsultForName() {
-          outputElement.value = `Hey ${
-            nameInputElement.value
-          }, ${nextInsult()}`;
-        }
-        btn1.addEventListener("click", displayInsultForName);
-      }
-
-      window.addEventListener("load", initApp);
-    </script>
-  </head>
-  <body>
-    <h1>Fast Insults for any Name</h1>
-    <label for="name">Whom do you want to insult?</label>
-    <input id="name" autofocus /> <button id="btn1">Insult</button>
-    <output id="out"></output>
-  </body>
+    window.addEventListener("load", initApp);
+  </script>
+</head>
+<body>
+<h1>Fast Insults for any Name</h1>
+<label for="name">Whom do you want to insult?</label>
+<input id="name" autofocus/>
+<button id="btn1">Insult</button>
+<output id="out"></output>
+</body>
 </html>
