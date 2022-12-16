@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "author": "Stolze",
   "license": "BSD-2-Clause",
@@ -12,5 +12,8 @@
     "express": "^4.10.8",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.14.2"
+  },
+  "engines": {
+    "node": ">=14"
   }
 }
